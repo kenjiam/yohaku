@@ -33,7 +33,7 @@
     const config = settings(category);
     if (!config.pressure || item.status !== 'open') return null;
     if (config.basis === 'deadline' && !item.dueDate) return null;
-    const value = config.basis === 'deadline' ? 1 - dueDays(item, time) / config.days : (time - Date.parse(item.createdAt)) / (DAY * config.days);
+    const value = item.dueDate ? 1 - dueDays(item, time) / config.days : (time - Date.parse(item.createdAt)) / (DAY * config.days);
     return Math.min(1, Math.max(0, value));
   }
   function sortItems(items, category, time = Date.now()) {

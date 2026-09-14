@@ -169,7 +169,7 @@ function updatePressureOptions() {
   if (!enabled && $('#category-sort').value === 'pressure') $('#category-sort').value = 'newest';
   const deadline = $('#pressure-basis').value === 'deadline';
   $('#pressure-days-label').textContent = deadline ? '期限の何日前から膨らむか' : '最大になるまでの日数';
-  $('#pressure-help').textContent = deadline ? '期限当日に最大になります。期限なしの項目は風船を表示せず、大きい順では末尾になります。' : '登録日を基準に膨らみます。編集やメモの追加ではリセットしません。';
+  $('#pressure-help').textContent = deadline ? '期限当日に最大になります。期限なしの項目は風船を表示せず、大きい順では末尾になります。' : '期限がある項目は期限を優先し、設定日数前から膨らんで期限当日に最大になります。期限がない項目は登録日からの日数で膨らみます。';
   $('#pressure-preview').replaceChildren(...[0, .5, 1].map(value => {
     const example = node('div'); example.append(balloon(value, $('#category-color').value, $('#pressure-motion').checked), node('span', 'muted', value === 0 ? '開始' : value === 1 ? '最大' : '途中')); return example;
   }));

@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'yohaku-shell-v3';
+const CACHE = 'yohaku-shell-v4';
 const ASSETS = ['./', './index.html', './style.css', './model.js', './app.js', './icon.svg', './icon-192.png', './icon-512.png', './manifest.webmanifest'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));

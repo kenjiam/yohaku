@@ -44,6 +44,17 @@ test('deadline pressure uses local calendar days and excludes undated items', ()
   const ordered = M.sortItems([item({ id: 'none' }), item({ id: 'later', dueDate: '2026-01-15' }), item({ id: 'today', dueDate: '2026-01-10' }), item({ id: 'overdue', dueDate: '2026-01-01' })], c, time);
   assert.deepEqual(ordered.map(i => i.id), ['overdue', 'today', 'later', 'none']);
 });
+test('a deadline overrides age-based growth and reaches maximum on its local date', () => {
+  const c = { ...M.initial().categories[0], settings: { pressure: true, basis: 'age', days: 10, motion: false, sort: 'pressure' } };
+  const task = item({ dueDate: '2026-02-10' });
+  assert.equal(M.pressure(task, c, new Date(2026, 1, 5).getTime()), .5);
+  assert.equal(M.pressure(task, c, new Date(2026, 1, 9, 23, 59).getTime()), .9);
+  assert.equal(M.pressure(task, c, new Date(2026, 1, 10).getTime()), 1);
+  assert.equal(M.pressure(task, c, new Date(2026, 1, 11).getTime()), 1);
+  assert.equal(M.pressure({ ...task, dueDate: '2026-02-20' }, c, new Date(2026, 1, 10).getTime()), 0);
+  assert.equal(M.pressure({ ...task, dueDate: null }, c, new Date(2026, 1, 5).getTime()), 1);
+  assert.equal(M.pressure(task, { ...c, settings: { ...c.settings, pressure: false } }), null);
+});
 test('rejects invalid optional settings/dates while accepting old backups', () => {
   assert.equal(M.validDue('2026-02-30'), false); assert.equal(M.validDue('2028-02-29'), true);
   assert.throws(() => M.validate({ ...M.initial(), items: [item({ dueDate: '2026-02-30' })] }));

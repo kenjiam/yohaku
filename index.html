@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta name="description" content="個人用のメモ・タスク管理。">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./style.css">
+  <title>余白</title>
+</head>
+<body>
+  <div class="app">
+    <header><a class="brand" href="./"><span class="brand-mark">◩</span> 余白</a><button id="settings-open" class="quiet">設定と保存</button></header>
+    <main>
+
+      <section id="encounter" class="encounter" aria-label="ピックアップ"></section>
+      <div class="section-line"><span>カテゴリ</span><button id="history-toggle" class="quiet" aria-pressed="false">完了履歴</button></div>
+      <nav id="categories" class="tabs" aria-label="箱を選ぶ"></nav>
+      <section id="box-view"><div class="box-heading"><div><h2 id="box-title"></h2><p id="box-description"></p></div><button id="category-edit" class="quiet" aria-label="選択中の箱を編集">カテゴリ設定</button></div>
+        <form id="capture" class="capture"><label for="capture-title" class="sr-only">項目</label><input id="capture-title" maxlength="500" placeholder="項目を追加" autocomplete="off" required><button class="primary" type="submit">追加 <span>＋</span></button></form>
+
+      </section>
+      <div id="sort-controls" class="sort-controls"><label for="item-sort">並び順</label><select id="item-sort"><option value="newest">追加が新しい順</option><option value="oldest">追加が古い順</option><option value="due">期限が近い順</option><option value="pressure">風船が大きい順</option></select></div><div id="list-heading" class="list-heading"></div><section id="items" class="items" aria-label="箱の中身"></section>
+    </main>
+    <footer>このブラウザに自動保存</footer>
+  </div>
+  <dialog id="item-dialog"><form id="item-form"><div class="dialog-top"><p class="eyebrow">項目を編集</p><button type="button" class="quiet" data-close aria-label="閉じる">✕</button></div><label for="item-title">内容</label><textarea id="item-title" rows="2" maxlength="500" required></textarea><label for="item-note">メモ</label><textarea id="item-note" rows="5" maxlength="20000" placeholder="補足（任意）"></textarea><label for="item-category">カテゴリ</label><select id="item-category"></select><div class="field-row"><div><label for="item-due">期限（任意）</label><input id="item-due" type="date" min="0001-01-01" max="9999-12-31"></div><button id="due-clear" type="button" class="quiet">期限を外す</button></div><label for="item-next">次の一手（任意）</label><input id="item-next" maxlength="500" placeholder="最初にすること"><p id="item-date" class="muted"></p><div class="dialog-actions"><button id="item-delete" type="button" class="danger quiet">削除</button><button type="submit" class="primary">保存する</button></div></form></dialog>
+  <dialog id="category-dialog"><form id="category-form"><div class="dialog-top"><p class="eyebrow">カテゴリ設定</p><button type="button" class="quiet" data-close aria-label="閉じる">✕</button></div><label for="category-name">箱の名前</label><input id="category-name" maxlength="30" required><label for="category-description">説明</label><input id="category-description" maxlength="160"><label for="category-color">箱の色</label><input id="category-color" type="color"><hr>
+<label class="check-label"><input id="category-pressure" type="checkbox">風船でプレッシャーを表示</label>
+<div id="pressure-options"><label for="pressure-basis">膨らむ基準</label><select id="pressure-basis"><option value="age">登録からの経過</option><option value="deadline">期限までの残り日数</option></select><label id="pressure-days-label" for="pressure-days">最大になるまでの日数</label><input id="pressure-days" type="number" min="1" max="3650" required value="30"><label class="check-label"><input id="pressure-motion" type="checkbox">風船を軽く揺らす</label><div id="pressure-preview" class="pressure-preview" aria-label="風船のサイズ見本"></div><p id="pressure-help" class="muted"></p><p class="muted">最大になっても自動では割れません。完了すると割れます。文字やボタンの位置は変わりません。</p></div>
+<label for="category-sort">並び順</label><select id="category-sort"><option value="newest">追加が新しい順</option><option value="oldest">追加が古い順</option><option value="due">期限が近い順</option><option value="pressure">風船が大きい順</option></select><div class="dialog-actions"><button id="category-delete" class="quiet danger" type="button">箱を削除</button><button class="primary" type="submit">保存する</button></div><p class="muted">中身のある箱を削除すると、項目は別の箱へ移ります。</p></form></dialog>
+  <dialog id="settings-dialog"><div class="dialog-top"><h2>設定と保存</h2><button class="quiet" data-close aria-label="閉じる">✕</button></div><p>データはこのブラウザに保存されます。JSONでバックアップできます。</p><div class="backup-actions"><button id="export" class="primary">JSONで書き出す ↓</button><button id="import" class="secondary">バックアップを読み込む ↑</button></div><input id="import-file" type="file" accept="application/json,.json" hidden><p class="muted">読み込みは現在のデータと統合します。同じIDの項目・箱は更新日時が新しいものを残します。</p><hr><h3>ホーム画面への追加</h3><p>ブラウザのメニューから「ホーム画面に追加」または「アプリをインストール」を選択。初回アクセス後はオフラインでも使えます。</p><p class="muted">ブラウザのデータ削除や端末の変更で、中身は失われます。別の端末へはJSONで引き継いでください。</p></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><span></span><button hidden>元に戻す</button></div>
+  <script src="./model.js"></script><script src="./app.js"></script>
+</body>
+</html>
